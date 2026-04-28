@@ -133,7 +133,7 @@ async def _push_frame_image(
     data_2bpp: bytes,
     interval_ms: int,
 ) -> bool:
-    from bluetag.ble import push
+    from bluetag.ble import connect_session
 
     mac_suffix = parse_mac_suffix(target["name"])
     frame = build_frame(mac_suffix, data_2bpp)
@@ -142,14 +142,26 @@ async def _push_frame_image(
         f"连接 {target['name']} [{profile.name}], {len(frame)} bytes, {len(packets)} 包"
     )
 
-    return await push(
-        packets,
-        device_address=target["address"],
-        packet_interval=interval_ms / 1000,
-        on_progress=_frame_progress,
-        prefixes=(profile.device_prefix,),
-        scan_timeout=DEFAULT_SCAN_TIMEOUT,
+    session = await connect_session(
+        target.get("_ble_device") or target["address"],
+        timeout=20.0,
+        connect_retries=DEFAULT_CONNECT_RETRIES,
     )
+    if not session:
+        return False
+
+    try:
+        total = len(packets)
+        for index, packet in enumerate(packets, start=1):
+            await session.write(packet, response=False)
+            await asyncio.sleep(interval_ms / 1000)
+            _frame_progress(index, total)
+        return True
+    except Exception as exc:
+        print(f"\n❌ 发送出错: {exc}")
+        return False
+    finally:
+        await session.close()
 
 
 async def _push_layer_image(
