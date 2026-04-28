@@ -1,6 +1,6 @@
 ---
 name: bbtag
-description: Push content to BluETag (蓝签) e-ink display via Bluetooth. Use this skill whenever the user wants to send text, images, reminders, menus, schedules, or any content to their bbtag/蓝签 device. Also trigger when the user wants to preview content, scan for nearby devices, or check device status. Key phrases: "推送到蓝签", "发给老婆", "更新蓝签显示", "push to bbtag", "send to display", "蓝签".
+description: 'Push content to BluETag (蓝签) e-ink display via Bluetooth. Use this skill whenever the user wants to send text, images, reminders, menus, schedules, or any content to their bbtag/蓝签 device. Also trigger when the user wants to preview content, scan for nearby devices, or check device status. Key phrases: 推送到蓝签, 发给老婆, 更新蓝签显示, push to bbtag, send to display.'
 version: 1.0.0
 user-invocable: true
 argument-hint: "[内容描述]"
